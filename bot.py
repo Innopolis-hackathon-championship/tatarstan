@@ -1,5 +1,5 @@
 import asyncio
-
+from database.DataBaseController import DataBase
 from aiogram import Bot, Dispatcher
 from config_data.config import Config, load_config
 from handlers import other_handlers, user_handlers, povar_handlers
@@ -19,6 +19,7 @@ dp.include_router(user_handlers.router)
 dp.include_router(other_handlers.router)
 dp.include_router(povar_handlers.router)
 
+db = DataBase()
 
 # Функция конфигурирования и запуска бота
 async def main():

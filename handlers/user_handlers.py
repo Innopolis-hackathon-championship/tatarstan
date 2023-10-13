@@ -6,7 +6,6 @@ from state.UserStates import UserState
 import state.UserStates
 from lexicon.lexicon import LEXICON_RU
 from aiogram import F
-from database.utils import get_user, add_user
 from aiogram.types import CallbackQuery
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.storage.memory import MemoryStorage

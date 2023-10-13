@@ -2,7 +2,9 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, KeyboardBu
 from aiogram.utils.keyboard import InlineKeyboardBuilder, ReplyKeyboardBuilder
 from lexicon.lexicon import LEXICON_RU
 
+from database.DataBaseController import DataBase
 
+db = DataBase()
 # Функция для формирования инлайн-клавиатуры на лету
 def create_inline_kb(width: int,
                      *args: str,
@@ -49,7 +51,7 @@ def create_reply_kb(width: int,
     return kb_builder.as_markup(resize_keyboard=True)
 
 
-orders_list = [503934, 20303, 8493, 29304, 222222, 3303003, 3030030, 82378738, 3885895784]  # обращение к бд, достающее список новых заказов
+orders_list = db.get_all_orders()  # обращение к бд, достающее список новых заказов
 orders_buttons = create_reply_kb(2, [f"ord:{i}" for i in orders_list])
 
 done_order_button = create_inline_kb(2, '⬅️ Назад', '✅ Заказ готов')

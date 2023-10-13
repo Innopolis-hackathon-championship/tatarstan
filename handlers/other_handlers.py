@@ -3,10 +3,10 @@ from aiogram.filters import Command, CommandStart, StateFilter
 from aiogram.types import Message
 from state.UserStates import UserState
 
+from database.DataBaseController import DataBase
 import state.UserStates
 from lexicon.lexicon import LEXICON_RU
 from aiogram import F
-from database.utils import get_user, add_user
 from aiogram.types import CallbackQuery
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.storage.memory import MemoryStorage
@@ -15,7 +15,7 @@ from aiogram.fsm.state import default_state
 
 # Инициализируем роутер уровня модуля
 router: Router = Router()
-
+db = DataBase()
 
 @router.message(CommandStart())
 async def process_start_command(message: Message, state: FSMContext):
@@ -24,8 +24,8 @@ async def process_start_command(message: Message, state: FSMContext):
 
 @router.message(StateFilter(UserState.auth))
 async def auth_user(message: Message, state: FSMContext):
-    #create_user(id)
-    user_data = await get_user(id)
+    db.set_user(user_id=message.from_user.id)
+    user_data = db.get_user(user_id=message.from_user.id)
     if ~(user_data['auth']):
         auth_key = message.text
         user_key = "AAAAAAAA"#get_user_key(message.from_user.id)['auth_key']
@@ -41,5 +41,5 @@ async def auth_user(message: Message, state: FSMContext):
         await message.answer('Вы уже авторизованы, чтобы\nузнать свои возможности напишите /help')
 @router.message(Command(commands='help'))
 async def process_help_command(message: Message):
-    user_data = await get_user(message.from_user.id)
+    user_data = db.get_user(message.from_user.id)
     await message.answer(text=LEXICON_RU[f"/help{user_data['role']}"])
