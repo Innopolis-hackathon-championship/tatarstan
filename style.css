@@ -1,3 +1,14 @@
+@font-face {
+    font-family: 'FontName';
+    src: url(Roboto-Black.ttf);
+}
+
+@font-face {
+    font-family: 'FontName Thin';
+    src: url(Roboto-Thin.ttf);
+}
+
+
 body {
     margin: 0;
     padding: 0;
@@ -5,6 +16,7 @@ body {
     color: var(--tg-theme-text-color);
     background: var(--tg-theme-bg-color);
     user-select: none;
+    font-family: 'FontName';
 }
 .container {
     max-width: 390px;
@@ -14,13 +26,13 @@ body {
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 200px 200px 200px;
     border-radius: 10px;
-    background: var(--th-theme-text-color);
 }
 .img {
     width: 150px;
 }
 .item {
     text-align: center;
+    background: var(--th-theme-text-color);
 }
 .add-btn, .sub-btn {
     display: inline-block;
@@ -35,4 +47,8 @@ body {
 }
 .usercard {
     text-align: center;
+}
+.name {
+    font-size: 12px;
+    font-family: 'FontName Thin';
 }

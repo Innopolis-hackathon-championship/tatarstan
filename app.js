@@ -21,11 +21,11 @@ for(let i = 0; i < products.length; i++)
     str += "<div class=\"item btn\">\n" +
         "                <img src=\"img"+(i+1)+".png\" alt=\"\" class=\"img\">\n" +
         "                <br />\n" +
-        "                <span style='font-size: 12px;'>"+products[i][0]+" | "+products[i][1]+" руб.</span>\n" +
+        "                <span class='name'>"+products[i][0]+" | "+products[i][1]+" руб.</span>\n" +
         "                <br />\n" +
         "                <button class=\"sub-btn\" style=\"display: none\">-</button>\n" +
         "                <span style=\"display: none;\" class=\"value\">0</span>\n" +
-        "                <button class=\"add-btn\">Купить</button>\n" +
+        "                <button class=\"add-btn\">Добавить</button>\n" +
         "            </div>"
 }
 document.getElementById('inner').innerHTML = str;
@@ -68,7 +68,7 @@ for(let i = 0; i < addBtn.length; i++)
         product[i]--;
         value[i].innerHTML = product[i];
         if (!product[i]) {
-            addBtn[i].innerHTML = "Купить";
+            addBtn[i].innerHTML = "Добавить";
             subBtn[i].style.display = "none";
             value[i].style.display = "none";
         }
