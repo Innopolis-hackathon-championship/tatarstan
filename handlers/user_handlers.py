@@ -17,19 +17,8 @@ router: Router = Router()
 
 
 # Этот хэндлер срабатывает на команду /start
-@router.message(CommandStart())
-async def process_start_command(message: Message):
-    try:
-        user_data = get_user(message.from_user.id)
-        await message.answer(text=LEXICON_RU[f"/help{user_data['role']}"])
 
-    except:
-        add_user(message.from_user.id)
-        await message.answer(text=LEXICON_RU['/start'])
 
 
 # Этот хэндлер срабатывает на команду /help
-@router.message(Command(commands='help'))
-async def process_help_command(message: Message):
-    user_data = get_user(message.from_user.id)
-    await message.answer(text=LEXICON_RU[f"/help{user_data['role']}"])
+
