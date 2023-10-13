@@ -58,7 +58,7 @@ for(let i = 0; i < addBtn.length; i++)
             tg.MainButton.hide();
         } else {
             let val = 0;
-            for (let j = 0; j < product.length; j++) val += product[i]*products[i][1];
+            for (let j = 0; j < product.length; j++) val += product[j]*products[j][1];
             tg.MainButton.setText("Выбрано товаров: " + sum + " | Итого:" + val + " руб.");
             console.log("Итого:" + val + " руб.");
             if(!tg.MainButton.isVisible) tg.MainButton.show();
@@ -81,7 +81,7 @@ for(let i = 0; i < addBtn.length; i++)
             tg.MainButton.hide();
         } else {
             let val = 0;
-            for (let j = 0; j < product.length; j++) val += product[i]*products[i][1];
+            for (let j = 0; j < product.length; j++) val += product[j]*products[j][1];
             tg.MainButton.setText("Выбрано товаров: " + sum + " | Итого:" + val + " руб.");
             console.log("Итого:" + val + " руб.");
             if(!tg.MainButton.isVisible) tg.MainButton.show();
