@@ -23,7 +23,7 @@ body {
 }
 .add-btn, .sub-btn {
     display: inline-block;
-    padding: 10px 20px;
+    padding: 5px 10px;
     border: none;
     background: brown;
     border-radius: 10px;
