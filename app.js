@@ -6,8 +6,32 @@ tg.MainButton.color = "#703f05";
 
 let item = '';
 
+let products = [
+    ['Пирожок с картошкой', 40],
+    ['Сосиска в тесте', 50],
+    ['Очпочмак', 57],
+    ['Круассан', 56],
+    ['Пицца ❤️', 53],
+]
+
+str = "";
+
+for(let i = 0; i < products.length; i++)
+{
+    str += "<div class=\"item btn\">\n" +
+        "                <img src=\"img"+(i+1)+".png\" alt=\"\" class=\"img\">\n" +
+        "                <br />\n" +
+        "                <span style='font-size: 12px;'>"+products[i][0]+" | "+products[i][1]+" руб.</span>\n" +
+        "                <br />\n" +
+        "                <button class=\"sub-btn\" style=\"display: none\">-</button>\n" +
+        "                <span style=\"display: none;\" class=\"value\">0</span>\n" +
+        "                <button class=\"add-btn\">Купить</button>\n" +
+        "            </div>"
+}
+document.getElementById('inner').innerHTML = str;
+
 let product = [];
-product.length = 6;
+product.length = 9;
 for(let j = 0; j < product.length; j++)
 {
     product[j] = 0;
@@ -60,14 +84,7 @@ for(let i = 0; i < addBtn.length; i++)
         }
     };
 }
-
-Telegram.WebApp.onEvent("mainButtonClicked", function () {
-    Telegram.sendData(item);
+Telegram.WebApp.onEvent('mainButtonClicked', function(){
+    tg.sendDataUnsafe(product);
+    //при клике на основную кнопку отправляем данные в строковом виде
 });
-
-let usercard = document.getElementById('usercard');
-
-let p = document.createElement('p');
-p.innerText = `${tg.initDataUnsafe.user.first_name}` +
-    `${tg.initDataUnsafe.user.last_name}`
-usercard.appendChild(p);
