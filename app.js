@@ -58,7 +58,7 @@ for(let i = 0; i < addBtn.length; i++)
             tg.MainButton.hide();
         } else {
             tg.MainButton.setText("Выбрано товаров: " + sum);
-            console.log("Выбрано товаров: " + sum);
+            console.log("Выбрано товаров: " + sum + ", общая сумма: " + sum);
             if(!tg.MainButton.isVisible) tg.MainButton.show();
         }
     };
@@ -79,12 +79,20 @@ for(let i = 0; i < addBtn.length; i++)
             tg.MainButton.hide();
         } else {
             tg.MainButton.setText("Выбрано товаров: " + sum);
-            console.log("Выбрано товаров: " + sum);
+            console.log("Выбрано товаров: " + sum + ", общая сумма: " + sum);
             if(!tg.MainButton.isVisible) tg.MainButton.show();
         }
     };
 }
 Telegram.WebApp.onEvent('mainButtonClicked', function(){
-    tg.sendDataUnsafe(product);
+    tg.sendData(product);
     //при клике на основную кнопку отправляем данные в строковом виде
 });
+
+
+let usercard = document.getElementById('usercard');
+
+let p = document.createElement('p');
+p.innerText = `${tg.initDataUnsafe.user.first_name}` +
+    `${tg.initDataUnsafe.user.last_name}`
+usercard.appendChild(p);
