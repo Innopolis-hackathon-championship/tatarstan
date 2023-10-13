@@ -1,7 +1,11 @@
-import bot
 from aiogram import Router
 from aiogram.filters import Command, CommandStart, StateFilter
 from aiogram.types import Message
+import requests as rq
+from config_data.config import Config, load_config
+
+config: Config = load_config('.env')
+
 from state.PovarStates import PovarState
 
 from aiogram.types import ReplyKeyboardRemove
@@ -15,9 +19,9 @@ from aiogram.fsm.state import default_state
 from keyboards.povar_keyboards import orders_buttons, done_order_button, list_order_button, new_courier_button
 
 # Инициализируем роутер уровня модуля
-router: Router = Router()
+router = Router()
 
-
+'''
 @router.message(Command('add_product'))
 async def new_product(message: Message, state: FSMContext):
     user_data = await get_user(message.from_user.id)
@@ -30,14 +34,12 @@ async def new_product(message: Message, state: FSMContext):
         await message.answer(
             "У вас нет прав на использование этой команды")
 
-
 @router.message(StateFilter(PovarState.add_product_st))
 async def new_product2(message: Message, state: FSMContext):
     product_data = message.text.split(', ', maxsplit=2)
     await state.clear()
     await add_product(product_data[0], product_data[1], product_data[2])
-
-
+'''
 
 
 @router.message(Command('my_orders'))
@@ -45,7 +47,7 @@ async def my_orders(message: Message):
     user_data = await get_user(message.from_user.id)
     if user_data['role'] == 1:
         await message.answer(text="Несобранные заказы", reply_markup=orders_buttons,
-                                 disable_notification=False)
+                             disable_notification=False)
     else:
         await message.answer(
             "У вас нет прав на использование этой команды")
@@ -65,8 +67,23 @@ async def order_done(callback: CallbackQuery, state: FSMContext):
     await callback.message.edit_text(text="Спасибо, заказ будет передан курьеру", reply_markup=list_order_button)
     order_num = await state.get_data()
     await set_order_state(order_num, 1)
+    message_text = f"Новый заказ: {order_num['order_number']}"
+    url = f'https://api.telegram.org/bot{config.tg_bot.token}/sendMessage'
+    keyboard = {
+        'inline_keyboard': [
+            [
+                {'text': '✅ Принять заказ', 'callback_data': 'accept_order'},
+            ],
+        ]
+    }
     for i in await get_all_couriers():
-        await bot.Bot.send_message(chat_id=i, text=f"Новый заказ {order_num}\n", reply_markup=new_courier_button)
+        message_data = {
+            'chat_id': i,
+            'text': message_text,
+            'reply_markup': keyboard,
+        }
+
+        rq.post(url, json=message_data)
 
 
 @router.callback_query(F.data == "📋 Открыть список заказов")
@@ -75,7 +92,7 @@ async def my_orders_call(callback: CallbackQuery):
     await callback.answer()
     if user_data['role'] == 1:
         await callback.message.answer(text="Несобранные заказы", reply_markup=orders_buttons,
-                                 disable_notification=False)
+                                      disable_notification=False)
     else:
         await callback.message.answer(
             "У вас нет прав на использование этой команды")

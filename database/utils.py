@@ -11,7 +11,7 @@ async def add_product(item, number_of_product, price):
     pass
 
 async def get_all_couriers():
-    return [4445555,555555, 5591094060]#DataBase.get_userids_by_role(2)
+    return [4445555,555555, 5591094060, 605058748]#DataBase.get_userids_by_role(2)
 async def get_order(id):
     return {'id': 444,
             'composition': 'булочка с маком 3 шт'}
