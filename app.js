@@ -31,7 +31,7 @@ for(let i = 0; i < products.length; i++)
 document.getElementById('inner').innerHTML = str;
 
 let product = [];
-product.length = 9;
+product.length = products.length;
 for(let j = 0; j < product.length; j++)
 {
     product[j] = 0;
@@ -57,8 +57,10 @@ for(let i = 0; i < addBtn.length; i++)
         if(!sum && tg.MainButton.isVisible) {
             tg.MainButton.hide();
         } else {
-            tg.MainButton.setText("Выбрано товаров: " + sum);
-            console.log("Выбрано товаров: " + sum + ", общая сумма: " + sum);
+            let val = 0;
+            for (let j = 0; j < product.length; j++) val += product[i]*products[i][1];
+            tg.MainButton.setText("Выбрано товаров: " + sum + " | Итого:" + val + " руб.");
+            console.log("Итого:" + val + " руб.");
             if(!tg.MainButton.isVisible) tg.MainButton.show();
         }
     };
@@ -78,8 +80,10 @@ for(let i = 0; i < addBtn.length; i++)
         if(!sum && tg.MainButton.isVisible) {
             tg.MainButton.hide();
         } else {
-            tg.MainButton.setText("Выбрано товаров: " + sum);
-            console.log("Выбрано товаров: " + sum + ", общая сумма: " + sum);
+            let val = 0;
+            for (let j = 0; j < product.length; j++) val += product[i]*products[i][1];
+            tg.MainButton.setText("Выбрано товаров: " + sum + " | Итого:" + val + " руб.");
+            console.log("Итого:" + val + " руб.");
             if(!tg.MainButton.isVisible) tg.MainButton.show();
         }
     };
