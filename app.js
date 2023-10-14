@@ -83,13 +83,21 @@ for(let i = 0; i < addBtn.length; i++)
             let val = 0;
             for (let j = 0; j < product.length; j++) val += product[j]*products[j][1];
             tg.MainButton.setText("Выбрано товаров: " + sum + " | Итого: " + val + " руб.");
-            console.log("Итого:" + val + " руб.");
+            let str = "";
+            for(let i = 0; i < product.length; i++) str += product[i] + " ";
+            console.log(str);
             if(!tg.MainButton.isVisible) tg.MainButton.show();
         }
     };
 }
 Telegram.WebApp.onEvent('mainButtonClicked', function(){
-    tg.sendData(product);
+    let val = 0;
+    for (let j = 0; j < product.length; j++) val += product[j]*products[j][1];
+    let str = prompt("Введите номер кабинета:");
+    for(let i = 0; i < product.length; i++) str += " " + product[i];
+    str += " " + val
+    console.log(str);
+    tg.sendData(str);
     //при клике на основную кнопку отправляем данные в строковом виде
 });
 
