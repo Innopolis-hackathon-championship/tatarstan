@@ -2,7 +2,7 @@ var tg = window.Telegram.WebApp;
 
 tg.expand();
 tg.MainButton.textColor = "#FFF";
-tg.MainButton.color = "#563004";
+tg.MainButton.color = "#9b2f12";
 
 let item = '';
 
@@ -11,7 +11,7 @@ let products = [
     ['Сосиска в тесте', 50],
     ['Очпочмак', 57],
     ['Круассан', 56],
-    ['Пицца ❤️', 53],
+    ['Пицца', 53],
 ]
 
 str = "";
@@ -59,7 +59,7 @@ for(let i = 0; i < addBtn.length; i++)
         } else {
             let val = 0;
             for (let j = 0; j < product.length; j++) val += product[j]*products[j][1];
-            tg.MainButton.setText("Выбрано товаров: " + sum + " | Итого:" + val + " руб.");
+            tg.MainButton.setText("Выбрано товаров: " + sum + " | Итого: " + val + " руб.");
             console.log("Итого:" + val + " руб.");
             if(!tg.MainButton.isVisible) tg.MainButton.show();
         }
@@ -82,7 +82,7 @@ for(let i = 0; i < addBtn.length; i++)
         } else {
             let val = 0;
             for (let j = 0; j < product.length; j++) val += product[j]*products[j][1];
-            tg.MainButton.setText("Выбрано товаров: " + sum + " | Итого:" + val + " руб.");
+            tg.MainButton.setText("Выбрано товаров: " + sum + " | Итого: " + val + " руб.");
             console.log("Итого:" + val + " руб.");
             if(!tg.MainButton.isVisible) tg.MainButton.show();
         }
