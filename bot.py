@@ -1,12 +1,14 @@
 import asyncio
+import logging
 from database.DataBaseController import DataBase
 from aiogram import Bot, Dispatcher
 from config_data.config import Config, load_config
-from handlers import other_handlers, user_handlers, povar_handlers
+from handlers import other_handlers, user_handlers, povar_handlers, courier_handlers
 from aiogram.fsm.storage.memory import MemoryStorage
 
 storage = MemoryStorage()
 
+logging.basicConfig(level=logging.INFO)
 # Загружаем конфиг в переменную config
 config: Config = load_config('.env')
 
@@ -18,6 +20,7 @@ dp: Dispatcher = Dispatcher(storage=storage)
 dp.include_router(user_handlers.router)
 dp.include_router(other_handlers.router)
 dp.include_router(povar_handlers.router)
+dp.include_router(courier_handlers.router)
 
 db = DataBase()
 
