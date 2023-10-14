@@ -45,28 +45,34 @@ async def new_product2(message: Message, state: FSMContext):
 
 
 async def code_word():
-    possible_keys = "QWERTYUIOPASDFGHJKLZXCVBNM12345678990qwertyuiopasdfghjklzxcvbnm!_-/|"
-    return ''.join([random.choice(possible_keys) for _ in range(8)])
+    possible_keys = "12345678990"
+    return ''.join([random.choice(possible_keys) for _ in range(5)])
 
 
 @router.message(Command('my_orders'))
 async def my_orders(message: Message):
     user_data = db.get_user(message.from_user.id)
     if user_data['role'] == 1:
-        await message.answer(text="Несобранные заказы", reply_markup=orders_buttons(),
-                             disable_notification=False)
+        print(any(orders_buttons().keyboard))
+        if any(orders_buttons().keyboard):
+            await message.answer(text="Несобранные заказы👇", reply_markup=orders_buttons(),
+                                 disable_notification=False)
+        else:
+            await message.answer(text="Несобранные заказы👇", reply_markup=ReplyKeyboardRemove(),
+                                 disable_notification=False)
     else:
         await message.answer(
-            "У вас нет прав на использование этой команды")
+            "У вас нет прав на использование этой команды❌")
 
 
 @router.message(F.text[:4] == "ord:")
 async def order_information(message: Message, state: FSMContext):
     order_data = db.get_order(message.text[4:])
+    await message.answer(text="Загружаем выбранный заказ👇", reply_markup=ReplyKeyboardRemove())
     await message.answer(text=f"Номер заказа: {order_data['to_whom_id']}\n"
                               f"Заказ: {order_data['composition']}", reply_markup=done_order_button)
     await state.update_data(order_number=message.text[4:])
-    await state.update_data(order_name=message.from_user.full_name)
+    await state.update_data(order_name=db.get_info_from_auth_keys(order_data['to_whom_id'])['name'])
 
 
 @router.callback_query(F.data == '✅ Заказ готов')
@@ -74,12 +80,14 @@ async def order_done(callback: CallbackQuery, state: FSMContext):
     await callback.message.edit_text(text="Спасибо, заказ будет передан курьеру", reply_markup=list_order_button)
     order_num = await state.get_data()
     order_data = db.get_order(order_num['order_number'])
+    print(order_data)
     message_text = f"Новый заказ: {order_data['id']}"
     url = f'https://api.telegram.org/bot{config.tg_bot.token}/sendMessage'
     keyboard = {
         'inline_keyboard': [
             [
-                {'text': '✅ Принять заказ', 'callback_data': f"accept_order {order_data['id']} {order_data['to_whom_id']} {'_'.join((order_num['order_name'].split(' ')))} {order_data['office']} {await code_word()}"},
+                {'text': '✅ Принять заказ',
+                 'callback_data': f"a {order_data['id']} {order_data['to_whom_id']} {'_'.join((order_num['order_name'].split(' ')))} {order_data['office']} {await code_word()}"},
             ],
         ]
     }
@@ -93,13 +101,12 @@ async def order_done(callback: CallbackQuery, state: FSMContext):
         rq.post(url, json=message_data)
 
 
+@router.callback_query(F.data == '⬅️ Назад')
 @router.callback_query(F.data == "📋 Открыть список заказов")
 async def my_orders_call(callback: CallbackQuery):
-    user_data = db.get_user(callback.message.from_user.id)
-    await callback.answer()
-    if user_data['role'] == 1:
-        await callback.message.answer(text="Несобранные заказы", reply_markup=orders_buttons(),
+    if any(orders_buttons().keyboard):
+        await callback.message.answer(text="Несобранные заказы👇", reply_markup=orders_buttons(),
                                       disable_notification=False)
     else:
-        await callback.message.answer(
-            "У вас нет прав на использование этой команды")
+        await callback.message.answer(text="Несобранные заказы👇", reply_markup=ReplyKeyboardRemove(),
+                                      disable_notification=False)

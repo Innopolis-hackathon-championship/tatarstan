@@ -5,6 +5,8 @@ from lexicon.lexicon import LEXICON_RU
 from database.DataBaseController import DataBase
 
 db = DataBase()
+
+
 # Функция для формирования инлайн-клавиатуры на лету
 def create_inline_kb(width: int,
                      *args: str,
@@ -50,8 +52,10 @@ def create_reply_kb(width: int,
     # Возвращаем объект инлайн-клавиатуры
     return kb_builder.as_markup(resize_keyboard=True)
 
+
 def orders_buttons():
     return create_reply_kb(2, [f"ord:{i}" for i in db.get_all_orders()])
+
 
 done_order_button = create_inline_kb(2, '⬅️ Назад', '✅ Заказ готов')
 
