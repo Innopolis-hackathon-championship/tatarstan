@@ -45,5 +45,6 @@ async def answer(webAppMes):
         db.set_order(webAppMes.chat.id, '_'.join(db.get_info_from_auth_keys(webAppMes.chat.id)['name'].split(' ')), order_data, str(order_dt[0])) # конкретно то что мы передали в бота
         print(webAppMes.chat.id, '_'.join(db.get_info_from_auth_keys(webAppMes.chat.id)['name'].split(' ')), order_data, str(order_dt[0]))
         await webAppMes.answer("Спасибо за заказ😊, как только курьер будет готов его вам передать, вы получите код потдтверждения.")
+        db.update_balance(webAppMes.chat.id, -float(order_dt[len(order_dt)-1]))
     # отправляем сообщение в ответ на отправку данных из веб-приложения
 

@@ -49,6 +49,10 @@ class DataBase:
 
         self.con.commit()
 
+    def update_balance(self, user_id, number):  # если number<0, то это вычитание, если number>0, то добавление баланса
+        self.cur.execute("""UPDATE users SET balance = (balance + ?) WHERE user_id = ?""", (number, user_id))
+        self.con.commit()
+
     def get_delivers_from_user(self, courier_id):  # функция для получения id пользователей кому должен доставить user
         result = self.cur.execute("""SELECT * FROM couriers WHERE courier_id = ?""", (courier_id,)).fetchall()
 
@@ -129,7 +133,8 @@ class DataBase:
         return dict(zip(column_names, result))
 
     def set_order(self, to_whom_id, name_of_to_whom, composition, office):
-        self.cur.execute("""INSERT INTO orders(to_whom_id, name_of_to_whom, composition, office) VALUES(?, ?, ?, ?)""", (to_whom_id, name_of_to_whom, composition, office))
+        self.cur.execute("""INSERT INTO orders(to_whom_id, name_of_to_whom, composition, office) VALUES(?, ?, ?, ?)""",
+                         (to_whom_id, name_of_to_whom, composition, office))
         self.con.commit()
 
     def del_order(self, order_id):

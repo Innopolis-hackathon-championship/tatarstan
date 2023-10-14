@@ -3,7 +3,7 @@ import logging
 from database.DataBaseController import DataBase
 from aiogram import Bot, Dispatcher
 from config_data.config import Config, load_config
-from handlers import other_handlers, user_handlers, povar_handlers, courier_handlers, webapp_handlers
+from handlers import other_handlers, superuser_handlers, povar_handlers, courier_handlers, webapp_handlers
 from aiogram.fsm.storage.memory import MemoryStorage
 
 storage = MemoryStorage()
@@ -17,7 +17,7 @@ bots: Bot = Bot(token=config.tg_bot.token)
 dp: Dispatcher = Dispatcher(storage=storage)
 
 # Регистриуем роутеры в диспетчере
-dp.include_router(user_handlers.router)
+dp.include_router(superuser_handlers.router)
 dp.include_router(other_handlers.router)
 dp.include_router(povar_handlers.router)
 dp.include_router(courier_handlers.router)
