@@ -48,7 +48,7 @@ for(let i = 0; i < addBtn.length; i++)
         addBtn[i].innerHTML = "+";
         subBtn[i].style.display = "";
         value[i].style.display = "";
-        value[i].innerHTML = product[i];
+        value[i].innerHTML = "&nbsp;" + product[i] + " ";
         let sum = 0;
         for(let j = 0; j < product.length; j++)
         {
@@ -66,7 +66,7 @@ for(let i = 0; i < addBtn.length; i++)
     };
     subBtn[i].onclick = function () {
         product[i]--;
-        value[i].innerHTML = product[i];
+        value[i].innerHTML = "&nbsp;" + product[i] + " ";
         if (!product[i]) {
             addBtn[i].innerHTML = "Добавить";
             subBtn[i].style.display = "none";
