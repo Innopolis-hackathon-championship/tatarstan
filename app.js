@@ -2,12 +2,12 @@ var tg = window.Telegram.WebApp;
 
 tg.expand();
 tg.MainButton.textColor = "#FFF";
-tg.MainButton.color = "#703f05";
+tg.MainButton.color = "#563004";
 
 let item = '';
 
 let products = [
-    ['Пирожок с картошкой', 40],
+    ['Беккен', 40],
     ['Сосиска в тесте', 50],
     ['Очпочмак', 57],
     ['Круассан', 56],
