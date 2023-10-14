@@ -23,14 +23,14 @@ from keyboards.povar_keyboards import orders_buttons, done_order_button, list_or
 router = Router()
 db = DataBase()
 
-'''
+
 @router.message(Command('add_product'))
 async def new_product(message: Message, state: FSMContext):
-    user_data = await get_user(message.from_user.id)
+    user_data = db.get_user(message.from_user.id)
     if user_data['role'] == 1:
         await message.answer(
-            "Введите параметры нового товара\n в формате(название, количестов, цена в руб)\n\n"
-            "Пример: Булочка с маком, 10, 100")
+            "Введите название и количество товара\n в формате(название, количестов)\n\n"
+            "Пример: Булочка с маком, 10")
         await state.set_state(PovarState.add_product_st)
     else:
         await message.answer(
@@ -38,10 +38,16 @@ async def new_product(message: Message, state: FSMContext):
 
 @router.message(StateFilter(PovarState.add_product_st))
 async def new_product2(message: Message, state: FSMContext):
-    product_data = message.text.split(', ', maxsplit=2)
+    product_data = message.text.split(', ')
     await state.clear()
-    await add_product(product_data[0], product_data[1], product_data[2])
-'''
+    if db.check_food_have(product_data[0]):
+        db.update_food(product_data[0], int(product_data[1]))
+    else:
+        db.set_food(product_data[0], int(product_data[1]))
+    product_data_base = db.get_food_amount(product_data[0])
+    await message.answer(f"Количество товара успешно обновлено!\n"
+                         f"Новое количество продукта: {product_data_base}")
+
 
 
 async def code_word():

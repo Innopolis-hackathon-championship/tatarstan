@@ -3,7 +3,7 @@ import sqlite3
 
 class DataBase:
     def __init__(self):
-        self.con = sqlite3.connect("DataBase.db")
+        self.con = sqlite3.connect("./database/DataBase.db")
         self.cur = self.con.cursor()
 
         self.cur.execute("""CREATE TABLE IF NOT EXISTS users(
@@ -16,11 +16,6 @@ class DataBase:
         self.cur.execute("""CREATE TABLE IF NOT EXISTS menu(
         name_food TEXT UNIQUE,
         amount INTEGER NOT NULL
-        )""")
-
-        self.cur.execute("""CREATE TABLE IF NOT EXISTS reviews(
-        user_id INTEGER NOT NULL,
-        feedback TEXT NOT NULL
         )""")
 
         self.cur.execute("""CREATE TABLE IF NOT EXISTS couriers(
@@ -45,6 +40,12 @@ class DataBase:
         name_of_to_whom TEXT NOT NULL,
         composition TEXT NOT NULL,
         office TEXT NOT NULL
+        )""")
+
+        self.cur.execute("""CREATE TABLE IF NOT EXISTS auth_keys(
+        user_id INTEGER UNIQUE NOT NULL,
+        name TEXT NOT NULL,
+        key TEXT UNIQUE NOT NULL
         )""")
 
         self.con.commit()
@@ -92,10 +93,6 @@ class DataBase:
         column_names = [description[0] for description in self.cur.description]
         return dict(zip(column_names, result))
 
-    def set_food(self, name_food, amount):
-        self.cur.execute("""INSERT INTO menu VALUES(?, ?)""", (name_food, amount))
-        self.con.commit()
-
     def set_user_role(self, user_id, role):
         self.cur.execute("""UPDATE users SET role = ? WHERE user_id = ?""", (role, user_id))
         self.con.commit()
@@ -104,9 +101,41 @@ class DataBase:
         self.cur.execute("""UPDATE users SET auth=1 WHERE user_id = ?""", (user_id,))
         self.con.commit()
 
+    def set_food(self, name_food, amount):
+        self.cur.execute("""INSERT INTO menu VALUES(?, ?)""", (name_food, amount))
+        self.con.commit()
+
+    def check_food_have(self, name):
+        res = None
+        try:
+            res = self.cur.execute("""SELECT * FROM menu WHERE name_food = ?""", (name,)).fetchone()
+        except:
+            pass
+        if res is None:
+            return False
+        else:
+            return True
+
     def update_food(self, name_food, number):  # если number<0, то это вычитание, если number>0, то добавление еды
         self.cur.execute("""UPDATE menu SET amount = (amount + ?) WHERE name_food = ?""", (number, name_food))
         self.con.commit()
+
+    def get_food_amount(self, name):
+        amo = -1
+        try:
+            amo = self.cur.execute("""SELECT amount FROM menu WHERE name_food = ?""", (name,)).fetchone()[0]
+        except:
+            pass
+        return amo
+
+    def get_all_food(self):
+        result = self.cur.execute("""SELECT * FROM menu""").fetchall()
+
+        food_arr = list()
+        column_names = [description[0] for description in self.cur.description]
+        for i in range(len(result)):
+            food_arr.append(dict(zip(column_names, result[i])))
+        return food_arr
 
     def get_all_couriers(self):
         return [i[0] for i in self.cur.execute("""SELECT user_id FROM users WHERE role=2""").fetchall()]
@@ -141,13 +170,18 @@ class DataBase:
         self.cur.execute("""DELETE FROM orders WHERE id = ?""", (order_id,))
         self.con.commit()
 
-    def set_feedback(self, user_id, feedback):
-        self.cur.execute("""INSERT INTO reviews VALUES(?, ?)""", (user_id, feedback))
-        self.con.commit()
-
     def check_auth_key(self, user_id, auth_key):  # auth_key - введеный пользоваталем ключ
         key = self.cur.execute("""SELECT key FROM auth_keys WHERE user_id = ?""", (user_id,)).fetchone()[0]
         return key == auth_key
+
+    def get_info_from_auth_keys(self, user_id):
+        result = self.cur.execute("""SELECT * FROM auth_keys WHERE user_id = ?""", (user_id,)).fetchone()
+        column_names = [description[0] for description in self.cur.description]
+        return dict(zip(column_names, result))
+
+    def set_auth_key(self, user_id, name, key):
+        self.cur.execute("""INSERT INTO auth_keys VALUES(?, ?, ?)""", (user_id, name, key))
+        self.con.commit()
 
     def get_info_from_auth_keys(self, user_id):
         result = self.cur.execute("""SELECT * FROM auth_keys WHERE user_id = ?""", (user_id,)).fetchone()

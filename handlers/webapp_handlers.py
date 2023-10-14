@@ -38,13 +38,23 @@ async def answer(webAppMes):
     print(webAppMes.chat.id)
     user_data = db.get_user(webAppMes.chat.id)
     order_dt = webAppMes.web_app_data.data.split(' ')
+    pd_data = ["Беккен", "Сосиска в тесте", "Очпочмак", "Круассан", "Пицца"]
+    for i in range(1, 6):
+        if int(order_dt[i]) > db.get_food_amount(f'{pd_data[i - 1]}'):
+            await webAppMes.answer(f"❌ Недостаточное количество продукта {pd_data[i-1]}")
+            return
     if float(user_data['balance']) < float(order_dt[len(order_dt)-1]):
         await webAppMes.answer("❌ У вас недостаточно средств(")
     else:
         order_data = f"Беккен:{order_dt[1]}шт Сосиска в тесте:{order_dt[2]}шт Очпочмак:{order_dt[3]}шт Круассан:{order_dt[4]}шт Пицца:{order_dt[5]}шт"
+        for i in range(1, 6):
+            if int(order_dt[i]) <= db.get_food_amount(f'{pd_data[i - 1]}'):
+                db.update_food(f'{pd_data[i - 1]}', order_dt[i]*-1)
         db.set_order(webAppMes.chat.id, '_'.join(db.get_info_from_auth_keys(webAppMes.chat.id)['name'].split(' ')), order_data, str(order_dt[0])) # конкретно то что мы передали в бота
         print(webAppMes.chat.id, '_'.join(db.get_info_from_auth_keys(webAppMes.chat.id)['name'].split(' ')), order_data, str(order_dt[0]))
         await webAppMes.answer("Спасибо за заказ😊, как только курьер будет готов его вам передать, вы получите код потдтверждения.")
         db.update_balance(webAppMes.chat.id, -float(order_dt[len(order_dt)-1]))
+
+
     # отправляем сообщение в ответ на отправку данных из веб-приложения
 

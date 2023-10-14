@@ -3,7 +3,7 @@ import logging
 import random
 from aiogram.filters import CommandStart
 from aiogram import Bot, Dispatcher, types
-from database2 import AuthData
+from database.DataBaseController import DataBase
 
 # Включаем логирование, чтобы не пропустить важные сообщения
 logging.basicConfig(level=logging.INFO)
@@ -12,7 +12,7 @@ bot = Bot(token="6405945930:AAES44ckOYx6HSjy68s9G29sAE5JXzjm1zA")
 # Диспетчер
 dp = Dispatcher()
 
-db = AuthData()
+db = DataBase()
 
 
 def auth_key():
